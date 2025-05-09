@@ -9,7 +9,7 @@
 # Each function should leave the colors in a clean state (e.g. call reset if they changed any colors).
 
 # For Git PS1
-source /etc/profile.d/git-prompt.sh;
+source /usr/share/git-core/contrib/completion/git-prompt.sh;
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM="verbose"
 
