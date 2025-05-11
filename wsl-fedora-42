@@ -9,10 +9,19 @@ MAIN_HOST_DIR="/mnt/c/Users/Max"
 
 
 # ======================================================================================================================
-# ==> Configure home with most links.
+# ==> Configure home with host links.
 echo Checking host softlinks...
 test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
-test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
+#test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
+
+
+
+# ======================================================================================================================
+# ==> Configure home with normal dirs.
+tets ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
+tets ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
+tets ! -d "$HOME/scripts" && mkdir "$HOME/scripts"
+tets ! -d "$HOME/temp" && mkdir "$HOME/temp"
 #tets ! -d "$HOME/dev" && mkdir "$HOME/dev"
 
 
