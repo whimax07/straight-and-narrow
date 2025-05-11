@@ -20,6 +20,6 @@ test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/Ide
 # ==> Configure bash.
 # Install git so PS1 works with Git.
 sudo dnf install -y git-all
-cp "$HOME/straight-and-narrow/.bashrc" "$HOME/.bashrc"
-cp "$HOME/straight-and-narrow/.mkps1" "$HOME/.mkps1"
+cp -f "$HOME/straight-and-narrow/.bashrc" "$HOME/.bashrc"
+cp -f "$HOME/straight-and-narrow/.mkps1" "$HOME/.mkps1"
 source "$HOME/.bashrc"
