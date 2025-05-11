@@ -10,6 +10,7 @@ MAIN_HOST_DIR="/mnt/c/Users/Max"
 
 # ======================================================================================================================
 # ==> Configure home with most links.
+echo Checking host softlinks...
 test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
 #tets ! -d "$HOME/dev" && mkdir "$HOME/dev"
@@ -19,7 +20,11 @@ test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/Ide
 # ======================================================================================================================
 # ==> Configure bash.
 # Install git so PS1 works with Git.
-sudo dnf install -y git-all
+echo Getting bash config...
+#sudo dnf install -y git-all
 cp -f "$HOME/straight-and-narrow/.bashrc" "$HOME/.bashrc"
 cp -f "$HOME/straight-and-narrow/.mkps1" "$HOME/.mkps1"
+cp -f "$HOME/straight-and-narrow/.bash_profile" "$HOME/.bash_profile"
+cp -f "$HOME/straight-and-narrow/.bash_aliases" "$HOME/.bash_aliases"
+echo Sourcing bashrc...
 source "$HOME/.bashrc"

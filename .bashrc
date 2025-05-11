@@ -3,11 +3,7 @@
 # for examples
 # Based off of https://github.com/mkasberg/dotfiles/tree/master
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+echo Loading bashrc...
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -106,5 +102,9 @@ fi
 
 export _BASHRC_LOADED=true
 if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != true ]; then
+    echo Loading bash profile from bashrc...
     source "$HOME/.bash_profile"
+else
+    unset _BASH_PROFILE_LOADED
+    unset _BASHRC_LOADED
 fi

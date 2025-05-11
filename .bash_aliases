@@ -1,3 +1,5 @@
+echo Loading bash aliases...
+
 # LS alias
 alias ll='ls -lF'
 alias la='ls -AF'
