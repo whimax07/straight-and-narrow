@@ -17,6 +17,13 @@ test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 
 
 # ======================================================================================================================
+# ==> Configure git to use host credential manager.
+echo Binding git credential manager to host...
+git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
+
+
+
+# ======================================================================================================================
 # ==> Configure home with normal dirs.
 test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
 test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
