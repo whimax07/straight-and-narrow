@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+# ======================================================================================================================
+# ==> Constants
+MAIN_HOST_DIR="/mnt/c/Users/Max"
+
+
+
+# ======================================================================================================================
+# ==> Configure home with most links.
+test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
+test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
+#tets ! -d "$HOME/dev" && mkdir "$HOME/dev"
+
+
+
+# ======================================================================================================================
+# ==> Configure bash.
+# Install git so PS1 works with Git.
+sudo dnf install -y git-all
+cp "$HOME/straight-and-narrow/.bashrc" "$HOME/.bashrc"
+cp "$HOME/straight-and-narrow/.mkps1" "$HOME/.mkps1"
+source "$HOME/.bashrc"

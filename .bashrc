@@ -3,6 +3,8 @@
 # for examples
 # Based off of https://github.com/mkasberg/dotfiles/tree/master
 
+BASHRC_LOADED=true
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -17,8 +19,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=20000
-HISTFILESIZE=20000
+HISTSIZE=200000
+HISTFILESIZE=200000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -94,7 +96,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -lF'
@@ -114,11 +116,6 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# Source Strava aliases & config if they exist
-if [ -f ~/.stravarc.bash ]; then
-    . ~/.stravarc.bash
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -134,7 +131,6 @@ fi
 # Trim the number of directories in PS1 \w:
 #export PROMPT_DIRTRIM=3
 
-# Add Go
-if [ -d "/usr/local/go/bin" ]; then
-    PATH="/usr/local/go/bin:$PATH"
+if [ -f "$HOME/.bash_profile" ]; then
+    source "$HOME/.bash_profile"
 fi
