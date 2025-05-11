@@ -44,3 +44,13 @@ cp -f "$HOME/straight-and-narrow/.bash_profile" "$HOME/.bash_profile"
 cp -f "$HOME/straight-and-narrow/.bash_aliases" "$HOME/.bash_aliases"
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
+
+
+
+# ======================================================================================================================
+# ==> Install common tools.
+sudo dnf install -y \
+    make \
+    vim \
+    wget
+
