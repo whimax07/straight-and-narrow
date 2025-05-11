@@ -18,11 +18,11 @@ test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 
 # ======================================================================================================================
 # ==> Configure home with normal dirs.
-tets ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
-tets ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
-tets ! -d "$HOME/scripts" && mkdir "$HOME/scripts"
-tets ! -d "$HOME/temp" && mkdir "$HOME/temp"
-#tets ! -d "$HOME/dev" && mkdir "$HOME/dev"
+test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
+test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
+test ! -d "$HOME/scripts" && mkdir "$HOME/scripts"
+test ! -d "$HOME/temp" && mkdir "$HOME/temp"
+#test ! -d "$HOME/dev" && mkdir "$HOME/dev"
 
 
 
