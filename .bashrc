@@ -3,7 +3,7 @@
 # for examples
 # Based off of https://github.com/mkasberg/dotfiles/tree/master
 
-BASHRC_LOADED=true
+source _BASHRC_LOADED=true
 
 # If not running interactively, don't do anything
 case $- in
