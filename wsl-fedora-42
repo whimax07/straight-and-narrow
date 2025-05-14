@@ -52,5 +52,5 @@ source "$HOME/.bashrc"
 sudo dnf install -y \
     make \
     vim \
-    wget
-
+    wget \
+    gedit 

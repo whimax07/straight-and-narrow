@@ -1,0 +1,32 @@
+# This file controls the behaviour of line input editing for
+# programs that use the GNU Readline library.  Existing
+# programs include FTP, Bash, and GDB.
+#
+# You can re-read the inputrc file with C-x C-r.
+# Lines beginning with '#' are comments.
+#
+# First, include any system-wide bindings and variable
+# assignments from /etc/Inputrc
+$include /etc/Inputrc
+
+
+set editing-mode emacs 
+$if mode=emacs
+
+
+# \EOC is right arrow.
+Control-\EOC: forward-word
+# \EOD is left arrow.
+Control-\EOD: backward-word
+
+
+# Ctrl + w is the default for deleteing a word. Ctrl + backspace is the same as ctrl + H for some 
+# reason. And since ctrl + w deletes whole words we just map ctrl + W to ctrl + backspace.
+"\C-H":"\C-W"
+
+
+# To help with my broken ps1 for multi-line commands with ctrl + r.
+Control-L: clear-screen
+
+
+set completion-ignore-case on
