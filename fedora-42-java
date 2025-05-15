@@ -1,0 +1,6 @@
+#!/bin/bash
+
+dnf install -y \
+    java-latest-openjdk-devel 
+    # java-latest-openjdk-devel \
+    # java-latest-openjdk-src

@@ -5,6 +5,13 @@ alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
 
+alias hexdump='hexdump --canonical'
+
+alias untarz='echo -zxvf; tar -zxvf'
+alias tarup='echo -zcvf; tar -zcvf'
+
+alias dirsize='du -ah . | sort -hr | head'
+
 
 
 # Add an "alert" alias for long running commands.  Use like so:
