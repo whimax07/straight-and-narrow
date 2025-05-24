@@ -112,7 +112,6 @@ export MANROFFOPT="-c"
 
 # Configure the ls colours/theme.
 if [ -f "$HOME/.set_ls_theme" ]; then 
-    echo Loading ls theme...
     . $HOME/.set_ls_theme SIMPLE_SOLARIZED
 fi
 
