@@ -5,11 +5,11 @@
 
 echo Loading bashrc...
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) echo "Not interactive, exiting."; return;;
-esac
+# # If not running interactively, don't do anything
+# case $- in
+#     *i*) ;;
+#       *) echo "Not interactive, exiting."; return;;
+# esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -102,9 +102,20 @@ fi
 
 # Alias definitions.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
 fi
+
+# Use bat when viewing man pages.
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+# Configure the ls colours/theme.
+if [ -f "$HOME/.set_ls_theme" ]; then 
+    echo Loading ls theme...
+    . $HOME/.set_ls_theme SIMPLE_SOLARIZED
+fi
+
 
 export _BASHRC_LOADED=true
 if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != true ]; then

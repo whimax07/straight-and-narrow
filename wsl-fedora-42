@@ -29,6 +29,7 @@ test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
 test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
 test ! -d "$HOME/scripts" && mkdir "$HOME/scripts"
 test ! -d "$HOME/temp" && mkdir "$HOME/temp"
+test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my"
 #test ! -d "$HOME/dev" && mkdir "$HOME/dev"
 
 
@@ -38,10 +39,11 @@ test ! -d "$HOME/temp" && mkdir "$HOME/temp"
 # Install git so PS1 works with Git.
 echo Getting bash config...
 #sudo dnf install -y git-all
-cp -f "$HOME/straight-and-narrow/.bashrc" "$HOME/.bashrc"
-cp -f "$HOME/straight-and-narrow/.mkps1" "$HOME/.mkps1"
-cp -f "$HOME/straight-and-narrow/.bash_profile" "$HOME/.bash_profile"
-cp -f "$HOME/straight-and-narrow/.bash_aliases" "$HOME/.bash_aliases"
+cp -f "$HOME/straight-and-narrow/dot-files/.bashrc" "$HOME/.bashrc"
+cp -f "$HOME/straight-and-narrow/dot-files/.mkps1" "$HOME/.mkps1"
+cp -f "$HOME/straight-and-narrow/dot-files/.bash_profile" "$HOME/.bash_profile"
+cp -f "$HOME/straight-and-narrow/dot-files/.bash_aliases" "$HOME/.bash_aliases"
+cp -f "$HOME/straight-and-narrow/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
 
@@ -53,4 +55,7 @@ sudo dnf install -y \
     make \
     vim \
     wget \
-    gedit 
+    gedit \
+    bat \
+    ranger \
+    golang

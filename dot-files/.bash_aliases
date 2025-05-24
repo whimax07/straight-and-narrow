@@ -4,6 +4,8 @@ echo Loading bash aliases...
 alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
+alias cat='bat --paging never'
+alias less='bat --paging always'
 
 alias hexdump='hexdump --canonical'
 
