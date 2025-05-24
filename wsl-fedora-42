@@ -57,5 +57,4 @@ sudo dnf install -y \
     wget \
     gedit \
     bat \
-    ranger \
-    golang
+    ranger 
