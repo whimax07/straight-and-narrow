@@ -115,6 +115,9 @@ if [ -f "$HOME/.set_ls_theme" ]; then
     . $HOME/.set_ls_theme SIMPLE_SOLARIZED
 fi
 
+# Enable ctrl + s forward search in bash by disabling XON/XOFF flow control. 
+stty -ixon
+
 
 export _BASHRC_LOADED=true
 if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != true ]; then
