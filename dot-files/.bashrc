@@ -115,8 +115,13 @@ if [ -f "$HOME/.set_ls_theme" ]; then
     . $HOME/.set_ls_theme SIMPLE_SOLARIZED
 fi
 
-# Enable ctrl + s forward search in bash by disabling XON/XOFF flow control. 
-stty -ixon
+# hash will return a zero exit code if the operand exists, i.e. the if branch is taken.
+if hash fzf; then
+    eval "$(fzf --bash)"
+else
+    # Enable ctrl + s forward search in bash by disabling XON/XOFF flow control.
+    stty -ixon
+fi
 
 
 export _BASHRC_LOADED=true

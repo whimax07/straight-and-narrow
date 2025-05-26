@@ -35,6 +35,19 @@ test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my"
 
 
 # ======================================================================================================================
+# ==> Install common tools.
+sudo dnf install -y \
+    make \
+    vim \
+    wget \
+    gedit \
+    bat \
+    ranger \
+    fzf
+
+
+
+# ======================================================================================================================
 # ==> Configure bash.
 # Install git so PS1 works with Git.
 echo Getting bash config...
@@ -46,16 +59,3 @@ cp -f "$HOME/straight-and-narrow/dot-files/.bash_aliases" "$HOME/.bash_aliases"
 cp -f "$HOME/straight-and-narrow/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
-
-
-
-# ======================================================================================================================
-# ==> Install common tools.
-sudo dnf install -y \
-    make \
-    vim \
-    wget \
-    gedit \
-    bat \
-    ranger \
-    fzf
