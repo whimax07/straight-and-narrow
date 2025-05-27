@@ -4,6 +4,7 @@ echo Loading bash aliases...
 alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
+
 alias cat='bat'
 alias lbat='bat --paging always'
 
@@ -16,6 +17,8 @@ alias dirsize='du -ah . | sort -hr | head'
 
 alias j='jump'
 function jump() {
+    # This function will be sourced when the aliases are applied. That means it is available to call AND the function
+    # is NOT ran in a sub-shell meaning the cd actually changes your terminal's directory.
     local selected="$("$HOME/straight-and-narrow/support/jump" "$@")"
     echo "Selected: ${selected:-EMPTY}"
     if [[ -n "$selected" ]]; then cd "$selected"; fi
