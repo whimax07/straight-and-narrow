@@ -14,8 +14,14 @@ alias tarup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
 
-# alias jump='. $HOME/straight-and-narrow/jump'
-# alias j='jump'
+alias jump='_jump'
+alias j='_jump'
+
+function _jump() {
+    local selected="$("$HOME/straight-and-narrow/support/jump" "$@")"
+    echo "Selected: ${selected:-EMPTY}"
+    if [[ -n "$selected" ]]; then cd "$selected"; fi
+}
 
 
 

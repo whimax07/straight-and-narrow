@@ -7,15 +7,11 @@ else
 fi
 
 chosen=$(fzf --walker="file,dir,follow,hidden" --walker-root="$startDir" --walker-skip=".git,node_modules,.idea")
-echo "Chosen: $chosen"
 
 if [[ -z "$chosen" ]]; then
-    echo "Chosen was empty."
     exit 0
-fi
-
-if [[ -d "$chosen" ]]; then
-    cd "$chosen"
+elif [[ -d "$chosen" ]]; then
+    echo "$chosen"
 else
-    cd $(dirname "$chosen")
+    dirname "$chosen"
 fi
