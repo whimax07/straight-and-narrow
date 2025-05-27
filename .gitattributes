@@ -1,2 +1,15 @@
+### ====================================================================================================================
+### All files in this repo are supposed to run on Linux so we hard set the End Of Line EOL sequence to LF.
+
+
 # Set the default behavior, in case people don't have core.autocrlf set.
+# This attribute marks the path as a text file, which enables end-of-line conversion: When a matching file is added to
+# the index, the file’s line endings are normalized to LF in the index. Conversely, when the file is copied from the
+# index to the working directory, its line endings may be converted from LF to CRLF depending on the eol attribute, the
+# Git config, and the platform (see explanation of eol below).
 * text=auto
+
+# This attribute marks a path to use a specific line-ending style in the working tree when it is checked out. It has
+# effect only if text or text=auto is set (see above), but specifying eol automatically sets text if text was left
+# unspecified.
+* eol=lf
