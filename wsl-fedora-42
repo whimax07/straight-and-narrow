@@ -56,6 +56,7 @@ cp -f "$HOME/straight-and-narrow/dot-files/.bashrc" "$HOME/.bashrc"
 cp -f "$HOME/straight-and-narrow/dot-files/.mkps1" "$HOME/.mkps1"
 cp -f "$HOME/straight-and-narrow/dot-files/.bash_profile" "$HOME/.bash_profile"
 cp -f "$HOME/straight-and-narrow/dot-files/.bash_aliases" "$HOME/.bash_aliases"
+cp -f "$HOME/straight-and-narrow/dot-files/.inputrc" "$HOME/.inputrc"
 cp -f "$HOME/straight-and-narrow/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
 echo Sourcing bashrc...
 source "$HOME/.bashrc"

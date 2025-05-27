@@ -14,6 +14,9 @@ alias tarup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
 
+# alias jump='. $HOME/straight-and-narrow/jump'
+# alias j='jump'
+
 
 
 # Add an "alert" alias for long running commands.  Use like so:
