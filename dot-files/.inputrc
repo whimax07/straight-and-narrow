@@ -9,24 +9,18 @@
 # assignments from /etc/Inputrc
 $include /etc/Inputrc
 
+# ctrl + right arrow
+"\e[1;5C": forward-word
+# ctrl + left arrow
+"\e[1;5D": backward-word
 
-set editing-mode emacs 
-$if mode=emacs
-
-
-# \EOC is right arrow.
-Control-\EOC: forward-word
-# \EOD is left arrow.
-Control-\EOD: backward-word
-
-
-# Ctrl + w is the default for deleteing a word. Ctrl + backspace is the same as ctrl + H for some 
-# reason. And since ctrl + w deletes whole words we just map ctrl + W to ctrl + backspace.
-"\C-H":"\C-W"
-
+# ctrl + backspace
+"\x7f": backward-kill-word
+# ctrl + delete
+"\e[3;5~": kill-word
 
 # To help with my broken ps1 for multi-line commands with ctrl + r.
-Control-L: clear-screen
+"\x0c": clear-screen
 
 
 set completion-ignore-case on

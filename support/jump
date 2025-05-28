@@ -6,7 +6,8 @@ else
     startDir="$1"
 fi
 
-chosen=$(fzf --walker="file,dir,follow,hidden" --walker-root="$startDir" --walker-skip=".git,node_modules,.idea")
+ignore_dirs=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache"
+chosen=$(fzf --walker="file,dir,follow,hidden" --walker-root="$startDir" --walker-skip="$ignore_dirs")
 
 if [[ -z "$chosen" ]]; then
     exit 0
