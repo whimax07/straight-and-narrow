@@ -1,13 +1,14 @@
 #!/bin/bash
 
+IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache"
+
 if [[ -z "$1" ]]; then
     startDir="$HOME"
 else
     startDir="$1"
 fi
 
-ignore_dirs=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache"
-chosen=$(fzf --walker="file,dir,follow,hidden" --walker-root="$startDir" --walker-skip="$ignore_dirs")
+chosen=$(fzf --walker="file,dir,follow,hidden" --walker-root="$startDir" --walker-skip="$IGNORE_DIRS")
 
 if [[ -z "$chosen" ]]; then
     exit 0
