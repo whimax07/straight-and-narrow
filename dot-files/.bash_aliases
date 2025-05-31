@@ -34,10 +34,22 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    # I have replaced this for .set_ls_theme because I had forgotten this was a thing.
+    # test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
+fi
+
+
+
+# Load custom bash completion files.
+if [[ -d "$HOME/.config/.bash_completion.d" ]]; then
+    # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
+    # escaping of slashes in file names.
+    find "$HOME/.config/.bash_completion.d" -type f | while IFS="" read -r file; do
+        source "$file"
+    done
 fi

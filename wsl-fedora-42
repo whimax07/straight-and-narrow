@@ -4,7 +4,9 @@ set -e
 
 # ======================================================================================================================
 # ==> Constants
+HERE="$HOME/straight-and-narrow"
 MAIN_HOST_DIR="/mnt/c/Users/Max"
+HOST_GIT_CERT="/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"
 
 
 
@@ -19,18 +21,20 @@ test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 # ======================================================================================================================
 # ==> Configure git to use host credential manager.
 echo Binding git credential manager to host...
-git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
+test -f "$HOST_GIT_CERT" && git config --global credential.helper "$HOST_GIT_CERT" || true
 
 
 
 # ======================================================================================================================
 # ==> Configure home with normal dirs.
-test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads"
-test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects"
-test ! -d "$HOME/scripts" && mkdir "$HOME/scripts"
-test ! -d "$HOME/temp" && mkdir "$HOME/temp"
-test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my"
-#test ! -d "$HOME/dev" && mkdir "$HOME/dev"
+# Or with true to prevent false failure error codes if the folder already exists.
+test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads" || true
+test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects" || true
+test ! -d "$HOME/scripts" && mkdir "$HOME/scripts" || true
+test ! -d "$HOME/temp" && mkdir "$HOME/temp" || true
+test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my" || true
+test ! -d "$HOME/.config/.bash_completion.d" && mkdir -p "$HOME/.config/.bash_completion.d" || true
+#test ! -d "$HOME/dev" && mkdir "$HOME/dev" || true
 
 
 
@@ -52,11 +56,13 @@ sudo dnf install -y \
 # Install git so PS1 works with Git.
 echo Getting bash config...
 #sudo dnf install -y git-all
-cp -f "$HOME/straight-and-narrow/dot-files/.bashrc" "$HOME/.bashrc"
-cp -f "$HOME/straight-and-narrow/dot-files/.mkps1" "$HOME/.mkps1"
-cp -f "$HOME/straight-and-narrow/dot-files/.bash_profile" "$HOME/.bash_profile"
-cp -f "$HOME/straight-and-narrow/dot-files/.bash_aliases" "$HOME/.bash_aliases"
-cp -f "$HOME/straight-and-narrow/dot-files/.inputrc" "$HOME/.inputrc"
-cp -f "$HOME/straight-and-narrow/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
+cp -f "$HERE/dot-files/.bashrc" "$HOME/.bashrc"
+cp -f "$HERE/dot-files/.mkps1" "$HOME/.mkps1"
+cp -f "$HERE/dot-files/.bash_profile" "$HOME/.bash_profile"
+cp -f "$HERE/dot-files/.bash_aliases" "$HOME/.bash_aliases"
+cp -f "$HERE/dot-files/.inputrc" "$HOME/.inputrc"
+cp -f "$HERE/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
+cp -fr "$HERE/bash_completion/." "$HOME/.config/.bash_completion.d/"
+
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
