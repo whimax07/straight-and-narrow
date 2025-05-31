@@ -32,8 +32,8 @@ test ! -d "$HOME/Downloads" && mkdir "$HOME/Downloads" || true
 test ! -d "$HOME/IdeaProjects" && mkdir "$HOME/IdeaProjects" || true
 test ! -d "$HOME/scripts" && mkdir "$HOME/scripts" || true
 test ! -d "$HOME/temp" && mkdir "$HOME/temp" || true
-test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my" || true
-test ! -d "$HOME/.config/.bash_completion.d" && mkdir -p "$HOME/.config/.bash_completion.d" || true
+test ! -d "$HOME/.config/bash_completion" && mkdir -p "$HOME/.config/bash_completion" || true
+#test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my" || true
 #test ! -d "$HOME/dev" && mkdir "$HOME/dev" || true
 
 
@@ -62,7 +62,7 @@ cp -f "$HERE/dot-files/.bash_profile" "$HOME/.bash_profile"
 cp -f "$HERE/dot-files/.bash_aliases" "$HOME/.bash_aliases"
 cp -f "$HERE/dot-files/.inputrc" "$HOME/.inputrc"
 cp -f "$HERE/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
-cp -fr "$HERE/bash_completion/." "$HOME/.config/.bash_completion.d/"
+cp -fr "$HERE/bash_completion/." "$HOME/.config/bash_completion/"
 
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
