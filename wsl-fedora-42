@@ -53,15 +53,15 @@ sudo dnf install -y \
 
 # ======================================================================================================================
 # ==> Configure bash.
-# Install git so PS1 works with Git.
 echo Getting bash config...
-#sudo dnf install -y git-all
 cp -f "$HERE/dot-files/.bashrc" "$HOME/.bashrc"
 cp -f "$HERE/dot-files/.mkps1" "$HOME/.mkps1"
 cp -f "$HERE/dot-files/.bash_profile" "$HOME/.bash_profile"
 cp -f "$HERE/dot-files/.bash_aliases" "$HOME/.bash_aliases"
 cp -f "$HERE/dot-files/.inputrc" "$HOME/.inputrc"
 cp -f "$HERE/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
+
+# Move all bash completion files. This may get changed when I actually have any bash completion functions configured.
 cp -fr "$HERE/bash_completion/." "$HOME/.config/bash_completion/"
 
 echo Sourcing bashrc...

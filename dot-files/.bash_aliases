@@ -1,5 +1,8 @@
 echo Loading bash aliases...
 
+# ======================================================================================================================
+# ==> Simple aliases.
+
 # LS alias
 alias ll='ls -lF'
 alias la='ls -AF'
@@ -15,10 +18,16 @@ alias tarup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
 
+
+
+# ======================================================================================================================
+# ==> Function based aliases.
+
 alias j='jump'
 function jump() {
     # This function will be sourced when the aliases are applied. That means it is available to call AND the function
-    # is NOT ran in a sub-shell meaning the cd actually changes your terminal's directory.
+    # is NOT ran in a sub-shell meaning the cd actually changes your terminal's directory. The actual implementation
+    # using fzf is ran in a subshell so if I ctrl + C a search it doesn't kill the session.
     local selected="$("$HOME/straight-and-narrow/support/jump" "$@")"
     echo "Selected: ${selected:-EMPTY}"
     if [[ -n "$selected" ]]; then cd "$selected"; fi
@@ -26,11 +35,12 @@ function jump() {
 
 
 
+# ======================================================================================================================
+# ==> Inherited with my PS1 implementation.
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -41,15 +51,4 @@ if [ -x /usr/bin/dircolors ]; then
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
-fi
-
-
-
-# Load custom bash completion files.
-if [[ -d "$HOME/.config/bash_completion" ]]; then
-    # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
-    # escaping of slashes in file names.
-    find "$HOME/.config/bash_completion" -type f | while IFS="" read -r file; do
-        source "$file"
-    done
 fi

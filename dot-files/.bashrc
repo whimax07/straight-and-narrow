@@ -5,6 +5,11 @@
 
 echo Loading bashrc...
 
+
+
+# ======================================================================================================================
+# ==> Inherited from PS1 implementation.
+
 # # If not running interactively, don't do anything
 # case $- in
 #     *i*) ;;
@@ -74,6 +79,9 @@ else
 fi
 unset color_prompt force_color_prompt
 
+# Trim the number of directories in PS1 \w:
+#export PROMPT_DIRTRIM=3
+
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
@@ -83,8 +91,17 @@ xterm*|rxvt*)
     ;;
 esac
 
-# colored GCC warnings and errors
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+
+# ======================================================================================================================
+# ==> Alias and completion.
+
+# Alias definitions.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
+fi
+
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -95,16 +112,24 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+
+  # Load custom bash completion files.
+  if [[ -d "$HOME/.config/bash_completion" ]]; then
+      # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
+      # escaping of slashes in file names.
+      find "$HOME/.config/bash_completion" -type f | while IFS="" read -r file; do
+          source "$file"
+      done
+  fi
 fi
 
-# Trim the number of directories in PS1 \w:
-#export PROMPT_DIRTRIM=3
 
-# Alias definitions.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f "$HOME/.bash_aliases" ]; then
-    . "$HOME/.bash_aliases"
-fi
+
+# ======================================================================================================================
+# ==> Colouring and viewing.
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Use bat when viewing man pages.
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
@@ -115,6 +140,10 @@ if [ -f "$HOME/.set_ls_theme" ]; then
     . $HOME/.set_ls_theme SIMPLE_SOLARIZED
 fi
 
+
+
+# ======================================================================================================================
+# ==> Keyboard shortcuts.
 # hash will return a zero exit code if the operand exists, i.e. the if branch is taken.
 if hash fzf; then
     eval "$(fzf --bash)"
@@ -123,6 +152,10 @@ else
     stty -ixon
 fi
 
+
+
+# ======================================================================================================================
+# ==> Manage recursive souring.
 
 export _BASHRC_LOADED=true
 if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != true ]; then

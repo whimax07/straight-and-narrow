@@ -1,4 +1,4 @@
 This is my command line configs. 
 
-The .bashrc is currently based off of [dotfiles by mkasberg](https://github.com/mkasberg/dotfiles/tree/master). 
+The .bashrc is currently based off of [dotfiles by mkasberg](https://github.com/mkasberg/dotfiles/tree/master) with a fair amount removed and added. 
 
