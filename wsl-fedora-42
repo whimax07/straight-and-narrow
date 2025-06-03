@@ -21,7 +21,12 @@ test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 # ======================================================================================================================
 # ==> Configure git to use host credential manager.
 echo Binding git credential manager to host...
-test -f "$HOST_GIT_CERT" && git config --global credential.helper "$HOST_GIT_CERT" || true
+test -f "$HOST_GIT_CERT"
+echo "Git certs exist $(test -f "$HOST_GIT_CERT")"
+# ${HOST_GIT_CERT// /\\ } replaces all spaces with "\ ". "HOST_GIT_CERT//" means replace all instances. " " is the 
+# pattern to match. "/" is the delimiter. "\\ " is the replace pattern, double \ is needed as the exprestion is 
+# evaluated.
+test -f "$HOST_GIT_CERT" && git config --global credential.helper "${HOST_GIT_CERT// /\\ }" || true
 
 
 
