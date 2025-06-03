@@ -47,7 +47,8 @@ sudo dnf install -y \
     gedit \
     bat \
     ranger \
-    fzf
+    fzf \
+    micro
 
 
 
