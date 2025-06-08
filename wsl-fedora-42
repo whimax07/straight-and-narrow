@@ -8,27 +8,21 @@ HERE="$HOME/straight-and-narrow"
 MAIN_HOST_DIR="/mnt/c/Users/Max"
 HOST_GIT_CERT="/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"
 
-
-
 # ======================================================================================================================
 # ==> Configure home with host links.
 echo Checking host softlinks...
 test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 #test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
 
-
-
 # ======================================================================================================================
 # ==> Configure git to use host credential manager.
 echo Binding git credential manager to host...
 test -f "$HOST_GIT_CERT"
 echo "Git certs exist $(test -f "$HOST_GIT_CERT")"
-# ${HOST_GIT_CERT// /\\ } replaces all spaces with "\ ". "HOST_GIT_CERT//" means replace all instances. " " is the 
-# pattern to match. "/" is the delimiter. "\\ " is the replace pattern, double \ is needed as the exprestion is 
+# ${HOST_GIT_CERT// /\\ } replaces all spaces with "\ ". "HOST_GIT_CERT//" means replace all instances. " " is the
+# pattern to match. "/" is the delimiter. "\\ " is the replace pattern, double \ is needed as the exprestion is
 # evaluated.
 test -f "$HOST_GIT_CERT" && git config --global credential.helper "${HOST_GIT_CERT// /\\ }" || true
-
-
 
 # ======================================================================================================================
 # ==> Configure home with normal dirs.
@@ -41,21 +35,17 @@ test ! -d "$HOME/.config/bash_completion" && mkdir -p "$HOME/.config/bash_comple
 #test ! -d "$HOME/.config/my" && mkdir -p "$HOME/.config/my" || true
 #test ! -d "$HOME/dev" && mkdir "$HOME/dev" || true
 
-
-
 # ======================================================================================================================
 # ==> Install common tools.
 sudo dnf install -y \
-    make \
-    vim \
-    wget \
-    gedit \
-    bat \
-    ranger \
-    fzf \
-    micro
-
-
+  make \
+  vim \
+  wget \
+  gedit \
+  bat \
+  ranger \
+  fzf \
+  micro
 
 # ======================================================================================================================
 # ==> Configure bash.
@@ -68,7 +58,7 @@ cp -f "$HERE/dot-files/.inputrc" "$HOME/.inputrc"
 cp -f "$HERE/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
 
 # Move all bash completion files. This may get changed when I actually have any bash completion functions configured.
-cp -fr "$HERE/bash_completion/." "$HOME/.config/bash_completion/"
+cp -fr "$HERE/bash-completion/." "$HOME/.config/bash_completion/"
 
 echo Sourcing bashrc...
 source "$HOME/.bashrc"
