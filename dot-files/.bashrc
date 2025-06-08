@@ -94,6 +94,16 @@ esac
 
 
 # ======================================================================================================================
+# ==> Editors.
+
+# Set micro to be used instead of nano. Things that use this varable include ranger.
+if hash micro; then
+	export EDITOR='micro'
+fi
+
+
+
+# ======================================================================================================================
 # ==> Alias and completion.
 
 # Alias definitions.
