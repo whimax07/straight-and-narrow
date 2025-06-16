@@ -18,6 +18,11 @@ alias tarup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
 
+alias p='pushd .'
+alias pp='dirs -v'
+alias d='pushd -1'
+alias s='pushd +1'
+
 
 
 # ======================================================================================================================

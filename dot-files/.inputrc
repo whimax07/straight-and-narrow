@@ -9,13 +9,20 @@
 # assignments from /etc/Inputrc
 $include /etc/Inputrc
 
+
+## You can use `showkeys -a` to see key sequences.
+
+
 # ctrl + right arrow
 "\e[1;5C": forward-word
 # ctrl + left arrow
 "\e[1;5D": backward-word
 
-# ctrl + backspace
-"\x7f": backward-kill-word
+
+# ctrl + backspace has different keycodes on different computers.
+#"\x7f": backward-kill-word
+"\x08": backward-kill-word
+
 # ctrl + delete
 "\e[3;5~": kill-word
 
