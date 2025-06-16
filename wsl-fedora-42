@@ -10,7 +10,7 @@ HOST_GIT_CERT="/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"
 
 # ======================================================================================================================
 # ==> Configure home with host links.
-echo Checking host softlinks...
+echo Checking host soft-links...
 test ! -L "$HOME/host" && ln -s "$MAIN_HOST_DIR" "$HOME/host"
 #test ! -L "$HOME/IdeaProjects" && ln -s "$MAIN_HOST_DIR/IdeaProjects" "$HOME/IdeaProjects"
 
@@ -20,7 +20,7 @@ echo Binding git credential manager to host...
 test -f "$HOST_GIT_CERT"
 echo "Git certs exist $(test -f "$HOST_GIT_CERT")"
 # ${HOST_GIT_CERT// /\\ } replaces all spaces with "\ ". "HOST_GIT_CERT//" means replace all instances. " " is the
-# pattern to match. "/" is the delimiter. "\\ " is the replace pattern, double \ is needed as the exprestion is
+# pattern to match. "/" is the delimiter. "\\ " is the replace pattern, double \ is needed as the expression is
 # evaluated.
 test -f "$HOST_GIT_CERT" && git config --global credential.helper "${HOST_GIT_CERT// /\\ }" || true
 
@@ -45,7 +45,9 @@ sudo dnf install -y \
   bat \
   ranger \
   fzf \
-  micro
+  micro \
+  aspell \
+  aspell-en
 
 # ======================================================================================================================
 # ==> Configure bash.
