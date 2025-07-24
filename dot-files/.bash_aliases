@@ -8,7 +8,6 @@ alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
 
-alias cat='bat'
 alias lbat='bat --paging always'
 
 alias hexdump='hexdump --canonical'
@@ -23,12 +22,14 @@ alias pp='dirs -v'
 alias d='pushd -1'
 alias s='pushd +1'
 
+# Invoke functions.
+alias j='jump'
+alias jj='jumpDir'
 
 
 # ======================================================================================================================
-# ==> Function based aliases.
+# ==> Functions.
 
-alias j='jump'
 function jump() {
     local IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache,.go,go"
     [[ -z "$1" ]] && local base="$HOME" || local base="$1";
@@ -39,7 +40,6 @@ function jump() {
     [[ -n "$selected" ]] && cd "$selected" || true
 }
 
-alias jj='jumpDir'
 function jumpDir() {
     local IGNORE_DIRS="host"
     [[ -z "$1" ]] && local base="$HOME" || local base="$1";
