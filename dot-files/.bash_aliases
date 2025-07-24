@@ -30,12 +30,24 @@ alias s='pushd +1'
 
 alias j='jump'
 function jump() {
-    # This function will be sourced when the aliases are applied. That means it is available to call AND the function
-    # is NOT ran in a sub-shell meaning the cd actually changes your terminal's directory. The actual implementation
-    # using fzf is ran in a subshell so if I ctrl + C a search it doesn't kill the session.
-    local selected="$("$HOME/straight-and-narrow/support/jump" "$@")"
+    local IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache,.go,go"
+    [[ -z "$1" ]] && local base="$HOME" || local base="$1";
+    # Invocation in a subshell means that ctrl + c doesn't kill the main shell even thought the function runs in the
+    # main shell as it is sourced.
+    local selected=$(fzf --walker="file,dir,follow,hidden" --walker-root="$base" --walker-skip="$IGNORE_DIRS")
     echo "Selected: ${selected:-EMPTY}"
-    if [[ -n "$selected" ]]; then cd "$selected"; fi
+    [[ -n "$selected" ]] && cd "$selected" || true
+}
+
+alias jj='jumpDir'
+function jumpDir() {
+    local IGNORE_DIRS="host"
+    [[ -z "$1" ]] && local base="$HOME" || local base="$1";
+    # Invocation in a subshell means that ctrl + c doesn't kill the main shell even thought the function runs in the
+    # main shell as it is sourced.
+    local selected=$(fzf --walker='dir,follow' --walker-skip="$IGNORE_DIRS" --walker-root="$base")
+    echo "Selected: ${selected:-EMPTY}"
+    [[ -n "$selected" ]] && cd "$selected" || true
 }
 
 
