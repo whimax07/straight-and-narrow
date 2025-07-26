@@ -38,7 +38,7 @@ function jump() {
     # main shell as it is sourced.
     local selected=$(fzf --walker="file,dir,follow,hidden" --walker-root="$base" --walker-skip="$IGNORE_DIRS")
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && cd "$selected" || true
+    [[ -n "$selected" ]] && { [[ -d "$selected" ]] || selected=$(dirname "$selected"); } && cd "$selected" || true
 }
 
 function jumpDir() {
