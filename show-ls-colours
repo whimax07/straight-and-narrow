@@ -3,11 +3,11 @@
 # Script taken from https://askubuntu.com/a/884513
 
 
-# Extra info collected from vatious places not all complete.
-# Defualts can be found with 'dircolors -p'. 
+# Extra info collected from various places not all complete.
+# Defaults can be found with 'dircolors -p'.
 # https://man7.org/linux/man-pages/man5/dir_colors.5.html
 
-# Guid for file atruibutes. 
+# Guid for file attributes.
 #     ===================================================================
 #     Basic file attributes
 #     ===================================================================

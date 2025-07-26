@@ -3,4 +3,5 @@
 dnf install -y \
     gcc \
     gcc-c++ \
-    colorgcc
+    colorgcc \
+    gdb

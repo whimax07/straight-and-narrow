@@ -33,7 +33,7 @@ __mkps1_exitcode() {
     local reset=`tput sgr0`;
 
     # We need to run a function at runtime to evaluate the exitcode.
-    echo "\[${bg_red}${white}\]\$(__mkps1_inject_exitcode \$?)\[${reset}\]"
+    echo "\[${bg_red}\]\[${white}\]\$(__mkps1_inject_exitcode \$?)\[${reset}\]"
 }
 
 __mkps1_time() {
@@ -41,7 +41,7 @@ __mkps1_time() {
     local white=`tput setaf 7`;
     local reset=`tput sgr0`;
 
-    echo "\[${BG_GRAY}${white}\]\t\[${reset}\]"
+    echo "\[${BG_GRAY}\]\[${white}\]\t\[${reset}\]"
 }
 
 __mkps1_username() {
