@@ -1,0 +1,28 @@
+#!/bin/bash
+
+REPO="localhost"
+IMAGE="micro"
+VERSION="latest"
+
+
+
+if [[ -n "$1" ]]; then
+    fullPath="$(realpath "$1")"
+else
+    fullPath="$(realpath .)"
+fi
+
+targetName="$(basename "$fullPath")"
+
+if [[ -d "$fullPath" ]]; then
+    editName=""
+    workDir="/home/$targetName"
+else
+    editName="$targetName"
+    workDir="/home"
+fi
+
+echo "Mounting \"$fullPath\", editing \"$editName\"..."
+
+#echo Running: podman run -it --rm --name micro --workdir "$workDir" -v "$fullPath:/home/$targetName:Z" "$REPO/$IMAGE:$VERSION" micro "$editName"...
+podman run -it --rm --name micro --workdir "$workDir" -v "$fullPath:/home/$targetName:Z" "$REPO/$IMAGE:$VERSION" micro "$editName"
