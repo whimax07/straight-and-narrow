@@ -30,6 +30,7 @@ alias cd='cdHistory'
 alias h='cdBack'
 alias l='cdForward'
 alias k='jumpToCdHistory'
+alias kk='jumpToCdHistory -u'
 
 
 
@@ -95,7 +96,12 @@ function jumpDir() {
 }
 
 function jumpToCdHistory() {
-    local selected=$(printf "%s\n" "${CD_HISTORY_UNIQUE[@]}" | fzf --tac --no-sort)
+    local selected
+    if [[ "$1" == "-u" ]]; then
+        selected=$(printf "%s\n" "${CD_HISTORY_UNIQUE[@]}" | fzf --tac --no-sort)
+    else
+        selected=$(printf "%s\n" "${CD_HISTORY[@]}" | fzf --tac --no-sort)
+    fi
     echo "Selected: ${selected:-EMPTY}"
     [[ -n "$selected" ]] && cdHistory "$selected" || true
 }
