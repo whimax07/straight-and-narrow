@@ -114,24 +114,6 @@ function cdForward() {
     CD_HISTORY_POSITION="$next_position"
 }
 
-function cdStatus() {
-    local array_size="${#CD_HISTORY[@]}"
-    printf "History buffer status. [Index=%s, Size=%s, Capacity=%s]\n" \
-        "$CD_HISTORY_POSITION" "$array_size" "$CD_HISTORY_SIZE"
-
-    printf "Previous: "
-    if (( CD_HISTORY_POSITION > 1 )); then
-        printf "%s" "${CD_HISTORY[CD_HISTORY_POSITION - 1]}"
-    fi
-    printf "\n"
-
-    printf "Next: "
-    if (( CD_HISTORY_POSITION + 1 < array_size )); then
-        printf "%s" "${CD_HISTORY[CD_HISTORY_POSITION + 1]}"
-    fi
-    printf "\n"
-}
-
 
 
 # ======================================================================================================================
