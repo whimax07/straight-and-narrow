@@ -29,6 +29,46 @@ alias jj='jumpDir'
 alias cd='cdHistory'
 alias h='cdBack'
 alias l='cdForward'
+alias k='jumpToCdHistory'
+
+
+
+# ======================================================================================================================
+# ==> Key binding.
+# This is split across here and .inputrc.
+
+# Bind with a -x flag executes the command on the right of the ":". It also populates some useful env vars.
+# Bind without the -x, expands the key sequence on the left to the key sequence on the right.
+
+# The idea: https://superuser.com/a/1662149
+# So we first save the current readline buffer and then clear it which leaves an empty command lien.
+# We can now run the target command.
+# To rerun the PS1 we then enter a new line (aka return) on a now empty command line.
+# Once that is done we put the readline buffer back how it was, restoring the command line.
+
+# Shared binding to restore the command line.
+bind -x '"\C-x\C-x": "_loadCommandLine"'
+
+# Binding that save the current readline buffer and then run a command(s).
+bind -x '"\C-x\C-h": "_saveCommandLine; cdBack"'
+bind -x '"\C-x\C-l": "_saveCommandLine; cdForward"'
+
+# The actual user side bindings which leaves your command line unaffected and reruns(!!!) the PS1.
+# The first cord is the command you want to run, \n then forces a PS1 rerun by and the second cord restores the readline
+# buffer to its previous state.
+bind '"\eh": "\C-x\C-h\n\C-x\C-x"'
+bind '"\el": "\C-x\C-l\n\C-x\C-x"'
+
+
+
+# ======================================================================================================================
+# ==> Environment variables.
+
+export CD_HISTORY=("$PWD")
+export CD_HISTORY_POSITION=0
+export CD_HISTORY_UNIQUE=("$PWD")
+export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
+
 
 
 # ======================================================================================================================
@@ -41,7 +81,7 @@ function jump() {
     # main shell as it is sourced.
     local selected=$(fzf --walker="file,dir,follow,hidden" --walker-root="$base" --walker-skip="$IGNORE_DIRS")
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && { [[ -d "$selected" ]] || selected=$(dirname "$selected"); } && cd "$selected" || true
+    [[ -n "$selected" ]] && { [[ -d "$selected" ]] || selected=$(dirname "$selected"); } && cdHistory "$selected" || true
 }
 
 function jumpDir() {
@@ -51,13 +91,15 @@ function jumpDir() {
     # main shell as it is sourced.
     local selected=$(fzf --walker='dir,follow' --walker-skip="$IGNORE_DIRS" --walker-root="$base")
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && cd "$selected" || true
+    [[ -n "$selected" ]] && cdHistory "$selected" || true
 }
 
-export CD_HISTORY=("$PWD")
-export CD_HISTORY_POSITION=0
-export CD_HISTORY_UNIQUE=("$PWD")
-export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-100}
+function jumpToCdHistory() {
+    local selected=$(printf "%s\n" "${CD_HISTORY_UNIQUE[@]}" | fzf --tac --no-sort)
+    echo "Selected: ${selected:-EMPTY}"
+    [[ -n "$selected" ]] && cdHistory "$selected" || true
+}
+
 function cdHistory() {
     # Get the current directory and then go to the next directory.
     local last_dir="$PWD"
@@ -83,6 +125,16 @@ function cdHistory() {
         # Get the range with indexes [new_start,array_size).
         CD_HISTORY=("${CD_HISTORY[@]:new_start}")
     fi
+
+    local copy_array=()
+    for path in "${CD_HISTORY_UNIQUE[@]}"; do
+        [[ "$PWD" == "$path" ]] || copy_array+=("$path")
+    done
+    copy_array+=("$PWD")
+
+    local start_index=$(( ${#copy_array[@]} - CD_HISTORY_SIZE ))
+    if (( start_index < 0 )); then start_index=0; fi
+    CD_HISTORY_UNIQUE=("${copy_array[@]:start_index}")
 }
 
 function cdBack() {
@@ -112,6 +164,23 @@ function cdForward() {
     # \ calls the non-aliased version.
     \cd "$next_dir" || return $?
     CD_HISTORY_POSITION="$next_position"
+}
+
+
+
+# ======================================================================================================================
+# ==> Utility functions.
+
+function _saveCommandLine() {
+    export READLINE_LINE_OLD="$READLINE_LINE"
+    export READLINE_POINT_OLD="$READLINE_POINT"
+    export READLINE_LINE=
+    export READLINE_POINT=0
+}
+
+function _loadCommandLine() {
+    export READLINE_LINE="$READLINE_LINE_OLD"
+    export READLINE_POINT="$READLINE_POINT_OLD"
 }
 
 

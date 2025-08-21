@@ -26,8 +26,5 @@ $include /etc/Inputrc
 # ctrl + delete
 "\e[3;5~": kill-word
 
-# To help with my broken ps1 for multi-line commands with ctrl + r.
-"\x0c": clear-screen
-
 
 set completion-ignore-case on
