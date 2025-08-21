@@ -26,7 +26,9 @@ alias s='pushd +1'
 alias j='jump'
 alias jj='jumpDir'
 
-alias cdStatus='echo "${CD_HISTORY_POSITION} -> ${CD_HISTORY[@]}"'
+alias cd='cdHistory'
+alias h='cdBack'
+alias l='cdForward'
 
 
 # ======================================================================================================================
@@ -52,13 +54,15 @@ function jumpDir() {
     [[ -n "$selected" ]] && cd "$selected" || true
 }
 
-export CD_HISTORY=()
-export CD_HISTORY_POSITION=-1
-export CD_HISTORY_UNIQUE=()
+export CD_HISTORY=("$PWD")
+export CD_HISTORY_POSITION=0
+export CD_HISTORY_UNIQUE=("$PWD")
+export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-100}
 function cdHistory() {
     # Get the current directory and then go to the next directory.
     local last_dir="$PWD"
-    cd "$@" || return $?
+    # \ calls the non-aliased version.
+    \cd "$@" || return $?
 
     if [[ "$last_dir" == "$PWD" ]]; then return 0; fi
 
@@ -66,17 +70,16 @@ function cdHistory() {
     local array_size="${#CD_HISTORY[@]}"
     if (( CD_HISTORY_POSITION + 1 < array_size )); then
         # We need to clear some of the buffer, 0 to the current position.
-        CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION}")
-        CD_HISTORY_POSITION=$(( ${#CD_HISTORY[@]} - 1 ))
+        CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION + 1}")
     fi
-    CD_HISTORY+=("$last_dir")
+
+    CD_HISTORY+=("$PWD")
     CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION + 1 ))
 
     # Check to see if the history buffer size needs reducing.
-    local history_size=${CD_HISTORY_SIZE:-100}
     local array_size="${#CD_HISTORY[@]}"
-    if (( array_size > history_size )); then
-        local new_start=$(( array_size - history_size ))
+    if (( array_size > CD_HISTORY_SIZE )); then
+        local new_start=$(( array_size - CD_HISTORY_SIZE ))
         # Get the range with indexes [new_start,array_size).
         CD_HISTORY=("${CD_HISTORY[@]:new_start}")
     fi
@@ -89,21 +92,12 @@ function cdBack() {
         return 0
     fi
 
-    local last_dir="$PWD"
-    local last_position="$CD_HISTORY_POSITION"
-
     local next_position=$(( CD_HISTORY_POSITION - 1 ))
     local next_dir="${CD_HISTORY[next_position]}"
 
-    cd "$next_dir" || return $?
+    # \ calls the non-aliased version.
+    \cd "$next_dir" || return $?
     CD_HISTORY_POSITION="$next_position"
-
-    # Check if we needed to add the dir we just jumped from to the cd history.
-    local array_size="${#CD_HISTORY[@]}"
-    local end_dir="${CD_HISTORY[last_position]}"
-    if (( last_position + 1 == array_size )) && [[ "$end_dir" != "$last_dir" ]]; then
-        CD_HISTORY+=("$last_dir")
-    fi
 }
 
 function cdForward() {
@@ -115,8 +109,27 @@ function cdForward() {
     local next_position=$(( CD_HISTORY_POSITION + 1 ))
     local next_dir="${CD_HISTORY[next_position]}"
 
-    cd "$next_dir" || return $?
+    # \ calls the non-aliased version.
+    \cd "$next_dir" || return $?
     CD_HISTORY_POSITION="$next_position"
+}
+
+function cdStatus() {
+    local array_size="${#CD_HISTORY[@]}"
+    printf "History buffer status. [Index=%s, Size=%s, Capacity=%s]\n" \
+        "$CD_HISTORY_POSITION" "$array_size" "$CD_HISTORY_SIZE"
+
+    printf "Previous: "
+    if (( CD_HISTORY_POSITION > 1 )); then
+        printf "%s" "${CD_HISTORY[CD_HISTORY_POSITION - 1]}"
+    fi
+    printf "\n"
+
+    printf "Next: "
+    if (( CD_HISTORY_POSITION + 1 < array_size )); then
+        printf "%s" "${CD_HISTORY[CD_HISTORY_POSITION + 1]}"
+    fi
+    printf "\n"
 }
 
 
