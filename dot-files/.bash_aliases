@@ -26,6 +26,7 @@ alias s='pushd +1'
 alias j='jump'
 alias jj='jumpDir'
 
+alias cdStatus='echo "${CD_HISTORY_POSITION} -> ${CD_HISTORY[@]}"'
 
 
 # ======================================================================================================================
@@ -49,6 +50,73 @@ function jumpDir() {
     local selected=$(fzf --walker='dir,follow' --walker-skip="$IGNORE_DIRS" --walker-root="$base")
     echo "Selected: ${selected:-EMPTY}"
     [[ -n "$selected" ]] && cd "$selected" || true
+}
+
+export CD_HISTORY=()
+export CD_HISTORY_POSITION=-1
+export CD_HISTORY_UNIQUE=()
+function cdHistory() {
+    # Get the current directory and then go to the next directory.
+    local last_dir="$PWD"
+    cd "$@" || return $?
+
+    if [[ "$last_dir" == "$PWD" ]]; then return 0; fi
+
+    # Clear overridden history, then append the last dir to the to the history.
+    local array_size="${#CD_HISTORY[@]}"
+    if (( CD_HISTORY_POSITION + 1 < array_size )); then
+        # We need to clear some of the buffer, 0 to the current position.
+        CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION}")
+        CD_HISTORY_POSITION=$(( ${#CD_HISTORY[@]} - 1 ))
+    fi
+    CD_HISTORY+=("$last_dir")
+    CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION + 1 ))
+
+    # Check to see if the history buffer size needs reducing.
+    local history_size=${CD_HISTORY_SIZE:-100}
+    local array_size="${#CD_HISTORY[@]}"
+    if (( array_size > history_size )); then
+        local new_start=$(( array_size - history_size ))
+        # Get the range with indexes [new_start,array_size).
+        CD_HISTORY=("${CD_HISTORY[@]:new_start}")
+    fi
+}
+
+function cdBack() {
+    # Exit early with a successful error code if we are at the start of history.
+    if (( CD_HISTORY_POSITION <= -1 )); then
+        echo "At the start of cd history."
+        return 0
+    fi
+
+    local last_dir="$PWD"
+    local last_position="$CD_HISTORY_POSITION"
+
+    local next_position=$(( CD_HISTORY_POSITION - 1 ))
+    local next_dir="${CD_HISTORY[next_position]}"
+
+    cd "$next_dir" || return $?
+    CD_HISTORY_POSITION="$next_position"
+
+    # Check if we needed to add the dir we just jumped from to the cd history.
+    local array_size="${#CD_HISTORY[@]}"
+    local end_dir="${CD_HISTORY[last_position]}"
+    if (( last_position + 1 == array_size )) && [[ "$end_dir" != "$last_dir" ]]; then
+        CD_HISTORY+=("$last_dir")
+    fi
+}
+
+function cdForward() {
+    if (( CD_HISTORY_POSITION + 1 >= "${#CD_HISTORY[@]}" )); then
+        echo "At the end of cd history."
+        return 0
+    fi
+
+    local next_position=$(( CD_HISTORY_POSITION + 1 ))
+    local next_dir="${CD_HISTORY[next_position]}"
+
+    cd "$next_dir" || return $?
+    CD_HISTORY_POSITION="$next_position"
 }
 
 

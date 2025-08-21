@@ -106,6 +106,8 @@ fi
 # ======================================================================================================================
 # ==> Alias and completion.
 
+export CD_HISTORY_SIZE=250
+
 # Alias definitions.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f "$HOME/.bash_aliases" ]; then
