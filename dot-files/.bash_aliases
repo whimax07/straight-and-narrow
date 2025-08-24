@@ -26,6 +26,8 @@ alias s='pushd +1'
 alias j='jump'
 alias jj='jumpDir'
 
+alias cdForward='cdThroughHistory 1'
+alias cdBack='cdThroughHistory -1'
 alias cd='cdHistory'
 alias h='cdBack'
 alias l='cdForward'
@@ -107,7 +109,6 @@ function jumpToCdHistory() {
 }
 
 function cdHistory() {
-    # Get the current directory and then go to the next directory.
     local last_dir="$PWD"
     # \ calls the non-aliased version.
     \cd "$@" || return $?
@@ -143,28 +144,14 @@ function cdHistory() {
     CD_HISTORY_UNIQUE=("${copy_array[@]:start_index}")
 }
 
-function cdBack() {
-    # Exit early with a successful error code if we are at the start of history.
-    if (( CD_HISTORY_POSITION <= -1 )); then
-        echo "At the start of cd history."
-        return 0
-    fi
-
-    local next_position=$(( CD_HISTORY_POSITION - 1 ))
-    local next_dir="${CD_HISTORY[next_position]}"
-
-    # \ calls the non-aliased version.
-    \cd "$next_dir" || return $?
-    CD_HISTORY_POSITION="$next_position"
-}
-
-function cdForward() {
-    if (( CD_HISTORY_POSITION + 1 >= "${#CD_HISTORY[@]}" )); then
+function cdThroughHistory() {
+    local change="$1"
+    if (( CD_HISTORY_POSITION + change < 0 )) || (( CD_HISTORY_POSITION + change >= "${#CD_HISTORY[@]}" )); then
         echo "At the end of cd history."
         return 0
     fi
 
-    local next_position=$(( CD_HISTORY_POSITION + 1 ))
+    local next_position=$(( CD_HISTORY_POSITION + change ))
     local next_dir="${CD_HISTORY[next_position]}"
 
     # \ calls the non-aliased version.
