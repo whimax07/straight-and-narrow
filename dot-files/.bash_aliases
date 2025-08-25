@@ -115,12 +115,9 @@ function cdHistory() {
 
     if [[ "$last_dir" == "$PWD" ]]; then return 0; fi
 
-    # Clear overridden history, then append the last dir to the to the history.
-    local array_size="${#CD_HISTORY[@]}"
-    if (( CD_HISTORY_POSITION + 1 < array_size )); then
-        # We need to clear some of the buffer, 0 to the current position.
-        CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION + 1}")
-    fi
+    # Check if we need to clear some of the buffer, everything after the current position. This happens when you are
+    # NOT at the end of the history but cdHistory is called.
+    if _boundsCheckCdHistory +1; then CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION + 1}"); fi
 
     CD_HISTORY+=("$PWD")
     CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION + 1 ))
@@ -131,8 +128,10 @@ function cdHistory() {
         local new_start=$(( array_size - CD_HISTORY_SIZE ))
         # Get the range with indexes [new_start,array_size).
         CD_HISTORY=("${CD_HISTORY[@]:new_start}")
+        CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION - new_start ))
     fi
 
+    # Manage the unique list of visited directories.
     local copy_array=()
     for path in "${CD_HISTORY_UNIQUE[@]}"; do
         [[ "$PWD" == "$path" ]] || copy_array+=("$path")
@@ -146,10 +145,7 @@ function cdHistory() {
 
 function cdThroughHistory() {
     local change="$1"
-    if (( CD_HISTORY_POSITION + change < 0 )) || (( CD_HISTORY_POSITION + change >= "${#CD_HISTORY[@]}" )); then
-        echo "At the end of cd history."
-        return 0
-    fi
+    if _boundsCheckCdHistory "$change"; then echo "At the end of CD History."; return 0; fi
 
     local next_position=$(( CD_HISTORY_POSITION + change ))
     local next_dir="${CD_HISTORY[next_position]}"
@@ -157,6 +153,10 @@ function cdThroughHistory() {
     # \ calls the non-aliased version.
     \cd "$next_dir" || return $?
     CD_HISTORY_POSITION="$next_position"
+}
+
+function _boundsCheckCdHistory() {
+    (( CD_HISTORY_POSITION + $1 < 0 )) || (( CD_HISTORY_POSITION + $1 >= "${#CD_HISTORY[@]}" ));
 }
 
 
