@@ -1,3 +1,4 @@
+#!/bin/bash
 echo Loading bash aliases...
 
 # ======================================================================================================================
@@ -145,6 +146,7 @@ function cdHistory() {
 
 function cdThroughHistory() {
     local change="$1"
+    _pruneDeadHistory "$change"
     if _boundsCheckCdHistory "$change"; then echo "At the end of CD History."; return 0; fi
 
     local next_position=$(( CD_HISTORY_POSITION + change ))
@@ -153,6 +155,25 @@ function cdThroughHistory() {
     # \ calls the non-aliased version.
     \cd "$next_dir" || return $?
     CD_HISTORY_POSITION="$next_position"
+}
+
+function _pruneDeadHistory() {
+    local change="$1"
+    if _boundsCheckCdHistory "$change"; then return 0; fi
+    if [[ -d "${CD_HISTORY[CD_HISTORY_POSITION + change]}" ]]; then return 0; fi
+
+    local cleaned_array=()
+    local position_slide=0
+    for (( i=0; i < ${#CD_HISTORY[@]}; i++ )); do
+        local dir_to_test="${CD_HISTORY[i]}"
+
+        if [[ -d "$dir_to_test" ]]; then cleaned_array+=("$dir_to_test")
+        elif (( i < CD_HISTORY_POSITION )); then (( position_slide++ ))
+        fi
+    done
+
+    CD_HISTORY=("${cleaned_array[@]}")
+    CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION - position_slide ))
 }
 
 function _boundsCheckCdHistory() {
@@ -181,7 +202,7 @@ function _loadCommandLine() {
 # ======================================================================================================================
 # ==> Inherited with my PS1 implementation.
 
-# Add an "alert" alias for long running commands.  Use like so:
+# Add an "alert" alias for long-running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
