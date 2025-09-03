@@ -80,22 +80,22 @@ export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
 
 function jump() {
     local IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache,.go,go"
-    [[ -z "$1" ]] && local base="$HOME" || local base="$1";
+    local base; [[ -z "$1" ]] && base="$HOME" || base="$1";
     # Invocation in a subshell means that ctrl + c doesn't kill the main shell even thought the function runs in the
     # main shell as it is sourced.
-    local selected=$(fzf --walker="file,dir,follow,hidden" --walker-root="$base" --walker-skip="$IGNORE_DIRS")
+    local selected; selected=$(fzf --walker="file,dir,follow,hidden" --walker-root="$base" --walker-skip="$IGNORE_DIRS")
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && { [[ -d "$selected" ]] || selected=$(dirname "$selected"); } && cdHistory "$selected" || true
+    [[ -n "$selected" ]] && { [[ -d "$selected" ]] || selected=$(dirname "$selected"); } && cdHistory "$selected" || return 0
 }
 
 function jumpDir() {
     local IGNORE_DIRS="host"
-    [[ -z "$1" ]] && local base="$HOME" || local base="$1";
+    local base; [[ -z "$1" ]] && base="$HOME" || base="$1";
     # Invocation in a subshell means that ctrl + c doesn't kill the main shell even thought the function runs in the
     # main shell as it is sourced.
-    local selected=$(fzf --walker='dir,follow' --walker-skip="$IGNORE_DIRS" --walker-root="$base")
+    local selected; selected=$(fzf --walker='dir,follow' --walker-skip="$IGNORE_DIRS" --walker-root="$base")
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && cdHistory "$selected" || true
+    [[ -n "$selected" ]] && cdHistory "$selected" || return 0
 }
 
 function jumpToCdHistory() {
@@ -106,7 +106,7 @@ function jumpToCdHistory() {
         selected=$(printf "%s\n" "${CD_HISTORY[@]}" | fzf --tac --no-sort)
     fi
     echo "Selected: ${selected:-EMPTY}"
-    [[ -n "$selected" ]] && cdHistory "$selected" || true
+    [[ -n "$selected" ]] && cdHistory "$selected" || return 0
 }
 
 function cdHistory() {
@@ -118,7 +118,7 @@ function cdHistory() {
 
     # Check if we need to clear some of the buffer, everything after the current position. This happens when you are
     # NOT at the end of the history but cdHistory is called.
-    if _boundsCheckCdHistory +1; then CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION + 1}"); fi
+    if ! _boundsCheckCdHistory +1; then CD_HISTORY=("${CD_HISTORY[@]:0:CD_HISTORY_POSITION + 1}"); fi
 
     CD_HISTORY+=("$PWD")
     CD_HISTORY_POSITION=$(( CD_HISTORY_POSITION + 1 ))
