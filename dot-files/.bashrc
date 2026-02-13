@@ -70,7 +70,10 @@ if [ "$color_prompt" = yes ]; then
  
     # Read Mike's custom prompt, apply it to PS1.
     source "$HOME/.mkps1"
+    PS_TIME_RECORD="/dev/shm/ps_time.$USER.$BASHPID"
+    PS0="$(__mkps0)"
     PS1="$(__mkps1)"
+    trap 'rm "$PS_TIME_RECORD" 2>/dev/null' EXIT
 else
     # Modified to support git status in PS1.
     # Also modified by Mike to function better.
