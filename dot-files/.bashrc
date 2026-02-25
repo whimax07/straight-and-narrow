@@ -130,8 +130,7 @@ if ! shopt -oq posix; then
     if [[ -d "$HOME/.config/bash_completion" ]]; then
         # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
         # escaping of slashes in file names.
-        find "$HOME/.config/bash_completion" -type f | while IFS="" read -r file; do
-            # Don't load the text file that is in bash-completion as a place holder for git.
+        for file in "$HOME/.config/bash_completion/"*; do
             if [[ "${file##*/}" == ".place-holder" ]]; then continue; fi
             echo "Loading completion files [$file]..."
             . "$file"
