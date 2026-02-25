@@ -9,14 +9,21 @@ alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
 
-alias lbat='bat --paging always'
+# \ calls the non-aliased version.
+alias lbat='\bat --paging always'
+alias bat='bat -S'
+
+# To support line numbers without bad line wrapping.
+alias man='MANWIDTH=$(( $COLUMNS - 5 )) man'
 
 alias hexdump='hexdump --canonical'
 
 alias untarz='echo -zxvf; tar -zxvf'
-alias tarup='echo -zcvf; tar -zcvf'
+alias tarzup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
+
+alias lp='pl'
 
 alias p='pushd .'
 alias pp='dirs -v'
@@ -77,6 +84,14 @@ export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
 
 # ======================================================================================================================
 # ==> Functions.
+
+function pl() {
+    if [[ "$1" != "-l" && "$1" != "--less" ]] && hash \bat; then
+        podman logs "$1" | bat --pager="less -R -f -n" -l log
+    else
+        podman logs "$2" | less
+    fi
+}
 
 function jump() {
     local IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache,.go,go"
