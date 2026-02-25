@@ -86,10 +86,10 @@ export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
 # ==> Functions.
 
 function pl() {
-    if [[ "$1" != "-l" && "$1" != "--less" ]] && hash \bat; then
+    if [[ "$1" == "-p" || "$1" == "--pretty" ]] && hash \bat; then
         podman logs "$1" | bat --pager="less -R -f -n" -l log
     else
-        podman logs "$2" | less
+        streamToFile "less" podman logs -f "$1"
     fi
 }
 
@@ -193,6 +193,29 @@ function _pruneDeadHistory() {
 
 function _boundsCheckCdHistory() {
     (( CD_HISTORY_POSITION + $1 < 0 )) || (( CD_HISTORY_POSITION + $1 >= "${#CD_HISTORY[@]}" ));
+}
+
+STREAM_TO_FILE_PID=
+STREAM_TO_FILE_FILE=
+function cleanUpStreamToFile() {
+    echo "Killing PID: $STREAM_TO_FILE_PID, File: $STREAM_TO_FILE_FILE"
+    kill -TERM "$STREAM_TO_FILE_PID" 2>/dev/null;
+    rm -f "$STREAM_TO_FILE_FILE";
+}
+
+function streamToFile() {
+    local view_command
+    view_command="$1"
+    shift
+    STREAM_TO_FILE_FILE=$(mktemp -t "streaming_to_file.$BASHPID.XXXXXX") || return 1
+
+    setsid "$@" >>"$STREAM_TO_FILE_FILE" 2>&1 &
+    STREAM_TO_FILE_PID=$!
+    trap cleanUpStreamToFile EXIT INT TERM RETURN
+
+    echo "PID: $STREAM_TO_FILE_PID"
+    sleep 0.5
+    eval $view_command "$STREAM_TO_FILE_FILE"
 }
 
 
