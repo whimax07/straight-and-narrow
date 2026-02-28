@@ -55,22 +55,25 @@ force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
     else
-	color_prompt=
+    color_prompt=
     fi
 fi
 
 if [ "$color_prompt" = yes ]; then
     # Default color prompt:
     #PS1='$${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
- 
+
     # Read Mike's custom prompt, apply it to PS1.
     source "$HOME/.mkps1"
+    PS_TIME_RECORD="/dev/shm/ps_time.$USER.$BASHPID"
+    PS0="$(__mkps0)"
     PS1="$(__mkps1)"
+    trap 'rm "$PS_TIME_RECORD" 2>/dev/null' EXIT
 else
     # Modified to support git status in PS1.
     # Also modified by Mike to function better.
@@ -98,7 +101,7 @@ esac
 
 # Set micro to be used instead of nano. Things that use this variable include ranger.
 if hash micro; then
-	export EDITOR='micro'
+    export EDITOR='micro'
 fi
 
 
@@ -117,20 +120,22 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 
-  # Load custom bash completion files.
-  if [[ -d "$HOME/.config/bash_completion" ]]; then
-      # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
-      # escaping of slashes in file names.
-      find "$HOME/.config/bash_completion" -type f | while IFS="" read -r file; do
-          source "$file"
-      done
-  fi
+    # Load custom bash completion files.
+    if [[ -d "$HOME/.config/bash_completion" ]]; then
+        # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
+        # escaping of slashes in file names.
+        for file in "$HOME/.config/bash_completion/"*; do
+            if [[ "${file##*/}" == ".place-holder" ]]; then continue; fi
+            echo "Loading completion files [$file]..."
+            . "$file"
+        done
+    fi
 fi
 
 
@@ -142,13 +147,20 @@ fi
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Use bat when viewing man pages.
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export MANROFFOPT="-c"
+if hash bat; then
+    export BAT_PAGER="less -n"
+    export MANPAGER="sh -c 'col -bx | bat -l man -n'"
+    export MANROFFOPT="-c"
+fi
 
 # Configure the ls colours/theme.
 if [ -f "$HOME/.set_ls_theme" ]; then 
     . $HOME/.set_ls_theme SIMPLE_SOLARIZED
 fi
+
+# Configure less by setting LESS to be a list of args you want to start with.
+# N sets line numbering, S sets line wrap to off and R enables escape codes.
+export LESS="N S R"
 
 
 

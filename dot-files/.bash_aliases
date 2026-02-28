@@ -9,14 +9,21 @@ alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CF'
 
-alias lbat='bat --paging always'
+# \ calls the non-aliased version.
+alias lbat='\bat --paging always'
+alias bat='bat -S'
+
+# To support line numbers without bad line wrapping.
+alias man='MANWIDTH=$(( $COLUMNS - 5 )) man'
 
 alias hexdump='hexdump --canonical'
 
 alias untarz='echo -zxvf; tar -zxvf'
-alias tarup='echo -zcvf; tar -zcvf'
+alias tarzup='echo -zcvf; tar -zcvf'
 
 alias dirsize='du -ah . | sort -hr | head'
+
+alias lp='pl'
 
 alias p='pushd .'
 alias pp='dirs -v'
@@ -77,6 +84,16 @@ export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
 
 # ======================================================================================================================
 # ==> Functions.
+
+function pl() {
+    if (( $# == 0 )); then podman ps -a; return; fi
+
+    if [[ "$1" == "-p" || "$1" == "--pretty" ]] && hash \bat; then
+        podman logs "$1" | bat --pager="less -R -f -n" -l log
+    else
+        streamToFile "less" podman logs -f "$1"
+    fi
+}
 
 function jump() {
     local IGNORE_DIRS=".git,host,node_modules,.idea,.m2,pkg,.vscode-server,.cache,.go,go"
@@ -178,6 +195,27 @@ function _pruneDeadHistory() {
 
 function _boundsCheckCdHistory() {
     (( CD_HISTORY_POSITION + $1 < 0 )) || (( CD_HISTORY_POSITION + $1 >= "${#CD_HISTORY[@]}" ));
+}
+
+STREAM_TO_FILE_CMD=
+STREAM_TO_FILE_FILE=
+function cleanUpStreamToFile() {
+    pkill -f "$STREAM_TO_FILE_CMD" 2>/dev/null
+    rm -f "$STREAM_TO_FILE_FILE"
+}
+
+function streamToFile() {
+    local view_command
+    view_command="$1"
+    shift
+    STREAM_TO_FILE_FILE=$(mktemp -t "streaming_to_file.$BASHPID.XXXXXX") || return 1
+
+    setsid "$@" >>"$STREAM_TO_FILE_FILE" 2>&1
+    STREAM_TO_FILE_CMD="$*"
+    trap cleanUpStreamToFile EXIT INT TERM RETURN
+
+    sleep 0.5
+    eval $view_command "$STREAM_TO_FILE_FILE"
 }
 
 

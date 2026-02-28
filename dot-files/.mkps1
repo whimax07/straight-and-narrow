@@ -97,12 +97,51 @@ __mkps1_user_prompt() {
     echo "\[${bold}\]\$\[${reset}\] ";
 }
 
+__mkps1_calculate_time_taken() {
+    if [[ ! -e "$PS_TIME_RECORD" ]]; then return; fi
+
+    local start_time
+    start_time=$(cat "$PS_TIME_RECORD")
+
+    rm -f "$PS_TIME_RECORD"
+    if ((start_time == 0)); then return; fi
+
+    local end_time
+    end_time=$(date +%s)
+
+    local duration
+    duration=$((end_time - start_time))
+    if ((duration == 0)); then return; fi
+    echo " e$duration"
+}
+
+__mkps1_show_time_taken() {
+    local BG_GRAY=`tput setab 240`;
+    local white=`tput setaf 7`;
+    local reset=`tput sgr0`;
+
+    echo "\[${BG_GRAY}\]\[${white}\]\$(__mkps1_calculate_time_taken)\[${reset}\]"
+}
+
 __mkps1() {
 	local newLine="\012"
-    local ps1="${newLine}$(__mkps1_box_top)$(__mkps1_debian_chroot)$(__mkps1_exitcode)$(__mkps1_time) $(__mkps1_username) $(__mkps1_arrows) $(__mkps1_workdir)$(__mkps1_git)${newLine}$(__mkps1_box_bottom)$(__mkps1_user_prompt)";
+    local ps1="${newLine}$(__mkps1_box_top)$(__mkps1_debian_chroot)$(__mkps1_exitcode)$(__mkps1_time)$(__mkps1_show_time_taken) $(__mkps1_username) $(__mkps1_arrows) $(__mkps1_workdir)$(__mkps1_git)${newLine}$(__mkps1_box_bottom)$(__mkps1_user_prompt)";
 
     echo "$ps1";
 }
+
+
+
+# shellcheck disable=SC2120
+__mkps1_set_start_time() {
+    date +%s > "$PS_TIME_RECORD"
+}
+
+__mkps0() {
+    echo "\$(__mkps1_set_start_time)"
+}
+
+
 
 # To test, for example, print output before changes and after changes
 # and see if the diff is correct.

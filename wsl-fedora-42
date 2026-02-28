@@ -62,5 +62,5 @@ cp -f "$HERE/dot-files/.set_ls_theme" "$HOME/.set_ls_theme"
 # Move all bash completion files. This may get changed when I actually have any bash completion functions configured.
 cp -fr "$HERE/bash-completion/." "$HOME/.config/bash_completion/"
 
-echo Sourcing bashrc...
-source "$HOME/.bashrc"
+#echo Sourcing bashrc...
+#source "$HOME/.bashrc"
