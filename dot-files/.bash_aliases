@@ -88,8 +88,8 @@ export CD_HISTORY_SIZE=${CD_HISTORY_SIZE:-250}
 function pl() {
     if (( $# == 0 )); then podman ps -a; return; fi
 
-    if [[ "$1" == "-p" || "$1" == "--pretty" ]] && hash \bat; then
-        podman logs "$1" | bat --pager="less -R -f -n" -l log
+    if [[ "$1" == "-p" || "$1" == "--pretty" ]] && hash bat; then
+        podman logs "$2" | bat --pager="less -R -f -n" -l log
     else
         streamToFile "less" podman logs -f "$1"
     fi
@@ -253,4 +253,16 @@ if [ -x /usr/bin/dircolors ]; then
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
+fi
+
+
+
+# ======================================================================================================================
+# ==> Load bash completion helpers.
+
+# Load bash completions.
+if [[ -d "$HOME/.config/bash_completion" ]]; then
+    for f in "$HOME/.config/bash_completion/"*; do
+        [[ -f "$f" ]] && source "$f" || true
+    done
 fi

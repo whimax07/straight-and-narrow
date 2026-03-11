@@ -3,6 +3,18 @@
 # for examples
 # Based off of https://github.com/mkasberg/dotfiles/tree/master
 
+
+# ======================================================================================================================
+# ==> Check environment.
+
+export _USER_BASHRC_LOADED=1
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
 echo Loading bashrc...
 
 
@@ -68,6 +80,7 @@ if [ "$color_prompt" = yes ]; then
     # Default color prompt:
     #PS1='$${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
+    export TERM=xterm-256color
     # Read Mike's custom prompt, apply it to PS1.
     source "$HOME/.mkps1"
     PS_TIME_RECORD="/dev/shm/ps_time.$USER.$BASHPID"
@@ -100,8 +113,17 @@ esac
 # ==> Editors.
 
 # Set micro to be used instead of nano. Things that use this variable include ranger.
-if hash micro; then
+if hash micro 2>/dev/null; then
     export EDITOR='micro'
+fi
+
+
+
+# ======================================================================================================================
+# ==> Path Management and Constants.
+
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
 fi
 
 
@@ -124,17 +146,6 @@ if ! shopt -oq posix; then
         . /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
-    fi
-
-    # Load custom bash completion files.
-    if [[ -d "$HOME/.config/bash_completion" ]]; then
-        # Find all files in the base dir. IFS splits the output one file per line (doesn't hate spaces), the -r prevents
-        # escaping of slashes in file names.
-        for file in "$HOME/.config/bash_completion/"*; do
-            if [[ "${file##*/}" == ".place-holder" ]]; then continue; fi
-            echo "Loading completion files [$file]..."
-            . "$file"
-        done
     fi
 fi
 
@@ -179,11 +190,10 @@ fi
 # ======================================================================================================================
 # ==> Manage recursive souring.
 
-export _BASHRC_LOADED=true
-if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != true ]; then
+if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != 1 ]; then
     echo Loading bash profile from bashrc...
     source "$HOME/.bash_profile"
 else
+    unset _USER_BASHRC_LOADED
     unset _BASH_PROFILE_LOADED
-    unset _BASHRC_LOADED
 fi

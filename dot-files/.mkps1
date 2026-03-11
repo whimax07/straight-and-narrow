@@ -37,11 +37,11 @@ __mkps1_exitcode() {
 }
 
 __mkps1_time() {
-    local BG_GRAY=`tput setab 240`;
+    local bg_grey=`tput setab 240`;
     local white=`tput setaf 7`;
     local reset=`tput sgr0`;
 
-    echo "\[${BG_GRAY}\]\[${white}\]\t\[${reset}\]"
+    echo "\[${bg_grey}\]\[${white}\]\t\[${reset}\]"
 }
 
 __mkps1_username() {
@@ -54,10 +54,9 @@ __mkps1_username() {
 __mkps1_arrows() {
     local bold=`tput bold`;
     local red=`tput setaf 1`;
-    local green=`tput setaf 34`;
     local reset=`tput sgr0`;
 
-    echo "\[${bold}${red}\]>>\[${green}\]>\[${reset}\]";
+    echo "\[${bold}${red}\]>>>\[${reset}\]";
 }
 
 __mkps1_workdir() {
@@ -116,11 +115,11 @@ __mkps1_calculate_time_taken() {
 }
 
 __mkps1_show_time_taken() {
-    local BG_GRAY=`tput setab 240`;
+    local bg_grey=`tput setab 240`;
     local white=`tput setaf 7`;
     local reset=`tput sgr0`;
 
-    echo "\[${BG_GRAY}\]\[${white}\]\$(__mkps1_calculate_time_taken)\[${reset}\]"
+    echo "\[${bg_grey}\]\[${white}\]\$(__mkps1_calculate_time_taken)\[${reset}\]"
 }
 
 __mkps1() {
