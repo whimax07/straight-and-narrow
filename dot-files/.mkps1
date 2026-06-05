@@ -37,55 +37,72 @@ __mkps1_exitcode() {
 }
 
 __mkps1_time() {
-    local bg_grey=`tput setab 240`;
+    local BG_GRAY=`tput setab 240`;
     local white=`tput setaf 7`;
     local reset=`tput sgr0`;
 
-    echo "\[${bg_grey}\]\[${white}\]\t\[${reset}\]"
+    echo "\[${BG_GRAY}\]\[${white}\]\t\[${reset}\]"
 }
 
 __mkps1_username() {
-    local cyan=`tput setaf 45`;
-    local reset=`tput sgr0`;
-
-    echo "\[${cyan}\]\u\[${reset}\]";
+    echo "\u";
 }
 
 __mkps1_arrows() {
     local bold=`tput bold`;
-    local red=`tput setaf 1`;
+    local green=`tput setaf 154`;
     local reset=`tput sgr0`;
 
-    echo "\[${bold}${red}\]>>>\[${reset}\]";
+    echo "\[${bold}${green}\]>>>\[${reset}\]";
+}
+
+__mkps1_add_depth() {
+    local bold=`tput bold`;
+    local almost_green=`tput setaf 100`;
+    local reset=`tput sgr0`;
+
+    if [[ "$PS_BASH_DEPTH" -eq 0 ]]; then
+        return
+    fi
+
+    if [[ "$PS_BASH_DEPTH" -eq 1 ]]; then
+        echo "\[${bold}${almost_green}\]>\[${reset}\]";
+        return
+    fi
+
+    echo "\[${bold}${almost_green}\]${PS_BASH_DEPTH}>\[${reset}\]";
 }
 
 __mkps1_workdir() {
     local bold=`tput bold`;
-    local cyan=`tput setaf 45`;
     local reset=`tput sgr0`;
 
-    echo "\[${bold}${cyan}\]\w\[${reset}\]";
+    echo "\[${bold}\]\w\[${reset}\]";
 }
 
 __mkps1_git() {
-    local magenta=`tput setaf 213`;
+    local yellow=`tput setaf 11`;
     local reset=`tput sgr0`;
 
     # Escaping the $ is intentional:
     # This is evaluated when the prompt is generated.
-    echo "\$(__git_ps1 ' (\[${magenta}\]%s\[${reset}\])')"
+    # echo "\$(__git_ps1 ' (\[${magenta}\]%s\[${reset}\])')"
+    echo "\[${yellow}\]\$(__git_ps1 ' (%s)')\[${reset}\]"
 }
 
+
 __mkps1_box_top() {
-    local cyan=`tput setaf 45`;
+    local bold=`tput bold`;
+    local green=`tput setaf 154`;
     local reset=`tput sgr0`;
-    echo "\[${cyan}\]╭\[${reset}\]"
+    echo "\[\]\[${bold}${green}\]| \[${reset}\]"
 }
 
 __mkps1_box_bottom() {
-    local cyan=`tput setaf 45`;
+    local bold=`tput bold`;
+    local green=`tput setaf 154`;
     local reset=`tput sgr0`;
-    echo "\[${cyan}\]╰\[${reset}\]"
+    echo "\[${bold}${green}\]| \[${reset}\]"
 }
 
 
@@ -115,16 +132,17 @@ __mkps1_calculate_time_taken() {
 }
 
 __mkps1_show_time_taken() {
-    local bg_grey=`tput setab 240`;
+    local BG_GRAY=`tput setab 240`;
     local white=`tput setaf 7`;
     local reset=`tput sgr0`;
 
-    echo "\[${bg_grey}\]\[${white}\]\$(__mkps1_calculate_time_taken)\[${reset}\]"
+    echo "\[${BG_GRAY}\]\[${white}\]\$(__mkps1_calculate_time_taken)\[${reset}\]"
 }
 
+
 __mkps1() {
-	local newLine="\012"
-    local ps1="${newLine}$(__mkps1_box_top)$(__mkps1_debian_chroot)$(__mkps1_exitcode)$(__mkps1_time)$(__mkps1_show_time_taken) $(__mkps1_username) $(__mkps1_arrows) $(__mkps1_workdir)$(__mkps1_git)${newLine}$(__mkps1_box_bottom)$(__mkps1_user_prompt)";
+    local newLine="\012"
+    local ps1="${newLine}$(__mkps1_debian_chroot)$(__mkps1_exitcode)$(__mkps1_time)$(__mkps1_show_time_taken) $(__mkps1_username) $(__mkps1_arrows)$(__mkps1_add_depth) $(__mkps1_workdir)$(__mkps1_git)${newLine}$(__mkps1_user_prompt)";
 
     echo "$ps1";
 }

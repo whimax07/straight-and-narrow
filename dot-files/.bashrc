@@ -22,12 +22,6 @@ echo Loading bashrc...
 # ======================================================================================================================
 # ==> Inherited from PS1 implementation.
 
-# # If not running interactively, don't do anything
-# case $- in
-#     *i*) ;;
-#       *) echo "Not interactive, exiting."; return;;
-# esac
-
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -70,9 +64,9 @@ if [ -n "$force_color_prompt" ]; then
     # We have color support; assume it's compliant with Ecma-48
     # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
     # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
+        color_prompt=yes
     else
-    color_prompt=
+        color_prompt=
     fi
 fi
 
@@ -83,6 +77,7 @@ if [ "$color_prompt" = yes ]; then
     export TERM=xterm-256color
     # Read Mike's custom prompt, apply it to PS1.
     source "$HOME/.mkps1"
+    export PS_BASH_DEPTH=$(( ${PS_BASH_DEPTH:--1} + 1 ))
     PS_TIME_RECORD="/dev/shm/ps_time.$USER.$BASHPID"
     PS0="$(__mkps0)"
     PS1="$(__mkps1)"
@@ -116,6 +111,7 @@ esac
 if hash micro 2>/dev/null; then
     export EDITOR='micro'
 fi
+
 
 
 
@@ -166,7 +162,8 @@ fi
 
 # Configure the ls colours/theme.
 if [ -f "$HOME/.set_ls_theme" ]; then 
-    . $HOME/.set_ls_theme SIMPLE_SOLARIZED
+    #. $HOME/.set_ls_theme SIMPLE_SOLARIZED
+    . $HOME/.set_ls_theme SNAZZY
 fi
 
 # Configure less by setting LESS to be a list of args you want to start with.
@@ -193,7 +190,4 @@ fi
 if [ -f "$HOME/.bash_profile" ] && [ "$_BASH_PROFILE_LOADED" != 1 ]; then
     echo Loading bash profile from bashrc...
     source "$HOME/.bash_profile"
-else
-    unset _USER_BASHRC_LOADED
-    unset _BASH_PROFILE_LOADED
 fi
