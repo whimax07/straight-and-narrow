@@ -11,7 +11,7 @@ alias l='ls -CF'
 
 # \ calls the non-aliased version.
 alias lbat='\bat --paging always'
-alias bat='bat -S'
+alias bat='bat --paging never'
 
 # To support line numbers without bad line wrapping.
 alias man='MANWIDTH=$(( $COLUMNS - 5 )) man'
